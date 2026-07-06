@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class EconomicIndicator extends Model
+{
+    protected $fillable = [
+        'country_id',
+        'gdp',
+        'inflation_rate',
+        'export_value',
+        'import_value',
+        'year',
+        'api_last_synced_at',
+    ];
+
+    protected $casts = [
+        'api_last_synced_at' => 'datetime',
+    ];
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
+}
