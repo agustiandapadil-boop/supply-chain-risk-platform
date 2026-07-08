@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\Country;
-use App\Models\WeatherRecord;
 use App\Models\WeatherHistory;
+use App\Models\WeatherRecord;
 use Illuminate\Support\Facades\Http;
 
 class WeatherService
@@ -26,7 +26,7 @@ class WeatherService
 
                 $synced++;
 
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
 
                 logger()->error(
                     'Weather sync failed',
@@ -41,35 +41,49 @@ class WeatherService
         return $synced;
     }
 
-    public function syncCountry(Country $country): void
-    {
-        $response = Http::timeout(30)
-            ->get(
-                'https://api.open-meteo.com/v1/forecast',
-                [
-                    'latitude' => $country->latitude,
-                    'longitude' => $country->longitude,
+    public function syncCountry(
+        Country $country
+    ): void {
 
-                    'current' => implode(',', [
-                        'temperature_2m',
-                        'rain',
-                        'wind_speed_10m',
-                        'weather_code'
-                    ])
-                ]
-            );
+        $response = Http::retry(
+            3,
+            1000
+        )
+        ->timeout(60)
+        ->get(
+            'https://api.open-meteo.com/v1/forecast',
+            [
+                'latitude' => $country->latitude,
+                'longitude' => $country->longitude,
 
-        if (!$response->successful()) {
+                'current' => implode(',', [
+                    'temperature_2m',
+                    'wind_speed_10m',
+                    'weather_code',
+                ]),
+
+                'daily' => 'precipitation_sum',
+
+                'forecast_days' => 1,
+
+                'timezone' => 'auto',
+            ]
+        );
+
+        if (! $response->successful()) {
+
             throw new \Exception(
-                'Open-Meteo request failed'
+                'Open-Meteo request failed. Status: '
+                . $response->status()
             );
         }
 
         $data = $response->json();
 
-        if (!isset($data['current'])) {
+        if (! isset($data['current'])) {
+
             throw new \Exception(
-                'Current weather not found'
+                'Current weather data not found'
             );
         }
 
@@ -78,17 +92,19 @@ class WeatherService
         $temperature =
             $current['temperature_2m'] ?? 0;
 
-        $rainfall =
-            $current['rain'] ?? 0;
-
         $windSpeed =
             $current['wind_speed_10m'] ?? 0;
 
         $weatherCode =
             $current['weather_code'] ?? 0;
 
+        $rainfall =
+            $data['daily']['precipitation_sum'][0]
+            ?? 0;
+
         $riskScore =
             $this->calculateWeatherRisk(
+                $temperature,
                 $rainfall,
                 $windSpeed,
                 $weatherCode
@@ -96,7 +112,7 @@ class WeatherService
 
         WeatherRecord::updateOrCreate(
             [
-                'country_id' => $country->id
+                'country_id' => $country->id,
             ],
             [
                 'temperature' => $temperature,
@@ -120,33 +136,79 @@ class WeatherService
     }
 
     private function calculateWeatherRisk(
+        float $temperature,
         float $rainfall,
         float $windSpeed,
         int $weatherCode
-    ): int
-    {
+    ): int {
+
         $risk = 0;
 
+        /*
+        |--------------------------------------------------------------------------
+        | Rainfall Risk
+        |--------------------------------------------------------------------------
+        */
+
         if ($rainfall > 5) {
-            $risk += 30;
+            $risk += 15;
         }
 
-        if ($rainfall > 15) {
+        if ($rainfall > 20) {
             $risk += 20;
         }
 
-        if ($windSpeed > 40) {
+        if ($rainfall > 50) {
             $risk += 25;
         }
 
-        if ($windSpeed > 70) {
+        /*
+        |--------------------------------------------------------------------------
+        | Wind Risk
+        |--------------------------------------------------------------------------
+        */
+
+        if ($windSpeed > 30) {
+            $risk += 15;
+        }
+
+        if ($windSpeed > 50) {
+            $risk += 20;
+        }
+
+        if ($windSpeed > 80) {
             $risk += 25;
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Extreme Temperature Risk
+        |--------------------------------------------------------------------------
+        */
+
+        if ($temperature >= 40) {
+            $risk += 20;
+        }
+
+        if ($temperature <= 0) {
+            $risk += 20;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Open-Meteo Severe Weather Codes
+        |--------------------------------------------------------------------------
+        */
 
         $dangerousCodes = [
+            65,
+            67,
+            75,
+            82,
+            86,
             95,
             96,
-            99
+            99,
         ];
 
         if (
@@ -155,9 +217,12 @@ class WeatherService
                 $dangerousCodes
             )
         ) {
-            $risk += 30;
+            $risk += 25;
         }
 
-        return min($risk, 100);
+        return min(
+            100,
+            $risk
+        );
     }
 }

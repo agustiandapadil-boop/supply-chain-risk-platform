@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
+use App\Models\EconomicIndicator;
 
 class Country extends Model
 {
@@ -27,59 +27,111 @@ class Country extends Model
         'api_last_synced_at',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Watchlists
+    |--------------------------------------------------------------------------
+    */
+
     public function watchlists(): HasMany
     {
         return $this->hasMany(Watchlist::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Weather
+    |--------------------------------------------------------------------------
+    */
+
     public function weatherRecord(): HasOne
-{
-    return $this->hasOne(WeatherRecord::class);
-}
+    {
+        return $this->hasOne(WeatherRecord::class);
+    }
 
-    public function economicIndicators()
-{
-    return $this->hasMany(EconomicIndicator::class);
-}
+    public function weatherHistories(): HasMany
+    {
+        return $this->hasMany(WeatherHistory::class);
+    }
 
-public function economicHistories()
-{
-    return $this->hasMany(EconomicHistory::class);
-}
+    /*
+    |--------------------------------------------------------------------------
+    | Economy
+    |--------------------------------------------------------------------------
+    */
 
-public function currencyRate()
-{
-    return $this->hasOne(CurrencyRate::class);
-}
+    public function economicIndicator(): HasOne
+    {
+        return $this->hasOne(EconomicIndicator::class);
+    }
 
-public function currencyHistories()
-{
-    return $this->hasMany(CurrencyHistory::class);
-}
+    public function economicHistories(): HasMany
+    {
+        return $this->hasMany(EconomicHistory::class);
+    }
 
-public function newsArticles()
-{
-    return $this->hasMany(NewsArticle::class);
-}
- 
-public function ports()
-{
-    return $this->hasMany(Port::class);
-}
+    /*
+    |--------------------------------------------------------------------------
+    | Currency
+    |--------------------------------------------------------------------------
+    */
 
-public function riskScore()
-{
-    return $this->hasOne(RiskScore::class);
-}
+    public function currencyRate(): HasOne
+    {
+        return $this->hasOne(CurrencyRate::class);
+    }
 
-public function riskHistories()
-{
-    return $this->hasMany(RiskHistory::class);
-}
+    public function currencyHistories(): HasMany
+    {
+        return $this->hasMany(CurrencyHistory::class);
+    }
 
-public function alerts()
-{
-    return $this->hasMany(Alert::class);
-}
+    /*
+    |--------------------------------------------------------------------------
+    | News
+    |--------------------------------------------------------------------------
+    */
 
+    public function newsArticles(): HasMany
+    {
+        return $this->hasMany(NewsArticle::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ports
+    |--------------------------------------------------------------------------
+    */
+
+    public function ports(): HasMany
+    {
+        return $this->hasMany(Port::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Risk
+    |--------------------------------------------------------------------------
+    */
+
+    public function riskScore(): HasOne
+    {
+        return $this->hasOne(RiskScore::class);
+    }
+
+    public function riskHistories(): HasMany
+    {
+        return $this->hasMany(RiskHistory::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Alerts
+    |--------------------------------------------------------------------------
+    */
+
+    public function alerts(): HasMany
+    {
+        return $this->hasMany(Alert::class);
+    }
 }
