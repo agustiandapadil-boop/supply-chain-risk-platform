@@ -22,7 +22,9 @@ class RiskScoringService
 
             try {
 
-                $this->calculateCountryRisk($country);
+                $this->calculateCountryRisk(
+                    $country
+                );
 
                 $count++;
 
@@ -31,8 +33,11 @@ class RiskScoringService
                 logger()->error(
                     'Risk calculation failed',
                     [
-                        'country' => $country->country_name,
-                        'message' => $e->getMessage(),
+                        'country' =>
+                            $country->country_name,
+
+                        'message' =>
+                            $e->getMessage(),
                     ]
                 );
             }
@@ -46,27 +51,53 @@ class RiskScoringService
     ): void
     {
         $weatherScore =
-            $this->calculateWeatherRisk($country);
+            $this->calculateWeatherRisk(
+                $country
+            );
 
         $inflationScore =
-            $this->calculateInflationRisk($country);
+            $this->calculateInflationRisk(
+                $country
+            );
 
         $currencyScore =
-            $this->calculateCurrencyRisk($country);
+            $this->calculateCurrencyRisk(
+                $country
+            );
 
         $newsScore =
             $this->calculateNewsRisk();
 
-        $totalScore =
-            ($weatherScore * 0.30)
-            +
-            ($inflationScore * 0.20)
-            +
-            ($newsScore * 0.40)
-            +
-            ($currencyScore * 0.10);
+        $portScore =
+            $this->calculatePortRisk(
+                $country
+            );
 
-        $totalScore = round($totalScore);
+        $totalScore =
+
+            ($weatherScore * 0.25)
+
+            +
+
+            ($inflationScore * 0.15)
+
+            +
+
+            ($currencyScore * 0.15)
+
+            +
+
+            ($newsScore * 0.20)
+
+            +
+
+            ($portScore * 0.25);
+
+        $totalScore =
+            round(
+                $totalScore,
+                2
+            );
 
         $riskLevel =
             $this->determineRiskLevel(
@@ -74,29 +105,65 @@ class RiskScoringService
             );
 
         RiskScore::updateOrCreate(
+
             [
-                'country_id' => $country->id,
+                'country_id' =>
+                    $country->id,
             ],
+
             [
-                'weather_score' => $weatherScore,
-                'inflation_score' => $inflationScore,
-                'currency_score' => $currencyScore,
-                'news_score' => $newsScore,
-                'total_score' => $totalScore,
-                'risk_level' => $riskLevel,
-                'calculated_at' => now(),
+
+                'weather_score' =>
+                    $weatherScore,
+
+                'inflation_score' =>
+                    $inflationScore,
+
+                'currency_score' =>
+                    $currencyScore,
+
+                'news_score' =>
+                    $newsScore,
+
+                'port_score' =>
+                    $portScore,
+
+                'total_score' =>
+                    $totalScore,
+
+                'risk_level' =>
+                    $riskLevel,
+
+                'calculated_at' =>
+                    now(),
             ]
         );
 
         RiskHistory::create([
-            'country_id' => $country->id,
-            'weather_score' => $weatherScore,
-            'inflation_score' => $inflationScore,
-            'currency_score' => $currencyScore,
-            'news_score' => $newsScore,
-            'total_score' => $totalScore,
-            'risk_level' => $riskLevel,
-            'calculated_at' => now(),
+
+            'country_id' =>
+                $country->id,
+
+            'weather_score' =>
+                $weatherScore,
+
+            'inflation_score' =>
+                $inflationScore,
+
+            'currency_score' =>
+                $currencyScore,
+
+            'news_score' =>
+                $newsScore,
+
+            'total_score' =>
+                $totalScore,
+
+            'risk_level' =>
+                $riskLevel,
+
+            'calculated_at' =>
+                now(),
         ]);
     }
 
@@ -188,25 +255,91 @@ class RiskScoringService
             )->count();
 
         if ($negative > $positive) {
+
             return 80;
         }
 
         if ($positive > $negative) {
+
             return 10;
         }
 
         return 40;
     }
 
+    private function calculatePortRisk(
+        Country $country
+    ): int
+    {
+        $ports =
+            $country
+            ->ports()
+            ->with('congestion')
+            ->get();
+
+        if (
+            $ports->isEmpty()
+        ) {
+            return 0;
+        }
+
+        $score =
+            $ports->avg(
+
+                function ($port) {
+
+                    if (
+                        ! $port->congestion
+                    ) {
+                        return 0;
+                    }
+
+                    return
+
+                        (
+                            $port
+                            ->congestion
+                            ->waiting_vessel
+                            * 0.3
+                        )
+
+                        +
+
+                        (
+                            $port
+                            ->congestion
+                            ->delay_hours
+                            * 2
+                        )
+
+                        +
+
+                        (
+                            $port
+                            ->congestion
+                            ->berth_utilization
+                            * 0.5
+                        );
+                }
+            );
+
+        return min(
+            100,
+            round($score)
+        );
+    }
+
     private function determineRiskLevel(
-        int $score
+        float $score
     ): string
     {
         if ($score <= 30) {
+
             return 'Low';
         }
 
         if ($score <= 60) {
+
             return 'Medium';
         }
 

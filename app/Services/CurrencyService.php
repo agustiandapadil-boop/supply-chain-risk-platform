@@ -101,11 +101,9 @@ class CurrencyService
         if ($rate < 0.5) {
             return 80;
         }
-
         if ($rate < 1) {
             return 60;
         }
-
         if ($rate < 10) {
             return 40;
         }

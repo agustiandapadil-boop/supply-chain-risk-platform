@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\EconomicIndicator;
+use App\Models\Port;
+use App\Models\AnalysisArticle;
 
 class Country extends Model
 {
@@ -27,39 +29,18 @@ class Country extends Model
         'api_last_synced_at',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Watchlists
-    |--------------------------------------------------------------------------
-    */
-
     public function watchlists(): HasMany
     {
         return $this->hasMany(Watchlist::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Weather
-    |--------------------------------------------------------------------------
-    */
-
     public function weatherRecord(): HasOne
     {
         return $this->hasOne(WeatherRecord::class);
     }
-
     public function weatherHistories(): HasMany
     {
         return $this->hasMany(WeatherHistory::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Economy
-    |--------------------------------------------------------------------------
-    */
-
     public function economicIndicator(): HasOne
     {
         return $this->hasOne(EconomicIndicator::class);
@@ -69,12 +50,6 @@ class Country extends Model
     {
         return $this->hasMany(EconomicHistory::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Currency
-    |--------------------------------------------------------------------------
-    */
 
     public function currencyRate(): HasOne
     {
@@ -86,33 +61,17 @@ class Country extends Model
         return $this->hasMany(CurrencyHistory::class);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | News
-    |--------------------------------------------------------------------------
-    */
-
     public function newsArticles(): HasMany
     {
         return $this->hasMany(NewsArticle::class);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Ports
-    |--------------------------------------------------------------------------
-    */
+ 
 
     public function ports(): HasMany
     {
         return $this->hasMany(Port::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Risk
-    |--------------------------------------------------------------------------
-    */
 
     public function riskScore(): HasOne
     {
@@ -123,15 +82,15 @@ class Country extends Model
     {
         return $this->hasMany(RiskHistory::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Alerts
-    |--------------------------------------------------------------------------
-    */
-
     public function alerts(): HasMany
     {
         return $this->hasMany(Alert::class);
     }
+
+    public function analysisArticles(): HasMany
+{
+    return $this->hasMany(
+        AnalysisArticle::class
+    );
+}
 }

@@ -103,17 +103,11 @@ class AlertService
     {
         Alert::create([
             'country_id'   => $countryId,
-
             'title'        => $type . ' Alert',
-
             'message'      => $message,
-
             'severity'     => $severity,
-
             'alert_type'   => $type,
-
             'is_active'    => true,
-
             'triggered_at' => now(),
         ]);
     }

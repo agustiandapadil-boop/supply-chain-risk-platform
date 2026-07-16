@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Services\RiskScoringService;
 use Illuminate\Console\Command;
+use App\Services\RiskScoringService;
+use App\Services\AlertService;
 
 class CalculateRiskCommand extends Command
 {
@@ -15,10 +16,12 @@ class CalculateRiskCommand extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Calculate supply chain risk score for all countries';
+    protected $description =
+        'Calculate supply chain risk score and generate alerts for all countries';
 
     public function __construct(
-        private RiskScoringService $riskScoringService
+        private RiskScoringService $riskScoringService,
+        private AlertService $alertService
     ) {
         parent::__construct();
     }
@@ -28,15 +31,43 @@ class CalculateRiskCommand extends Command
      */
     public function handle(): int
     {
+        $this->info('======================================');
+        $this->info('SUPPLY CHAIN RISK CALCULATION STARTED');
+        $this->info('======================================');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Calculate Risk Scores
+        |--------------------------------------------------------------------------
+        */
         $this->info('Calculating risk scores...');
 
-        $count =
+        $countryCount =
             $this->riskScoringService
                 ->calculateAllCountries();
 
         $this->info(
-            "{$count} countries risk calculated successfully."
+            "{$countryCount} countries risk calculated successfully."
         );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Generate Alerts
+        |--------------------------------------------------------------------------
+        */
+        $this->info('Generating alerts...');
+
+        $alertCount =
+            $this->alertService
+                ->generateAlerts();
+
+        $this->info(
+            "{$alertCount} alerts generated successfully."
+        );
+
+        $this->info('======================================');
+        $this->info('PROCESS COMPLETED');
+        $this->info('======================================');
 
         return self::SUCCESS;
     }

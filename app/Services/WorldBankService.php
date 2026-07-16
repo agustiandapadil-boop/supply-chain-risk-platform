@@ -19,9 +19,7 @@ class WorldBankService
     public function syncAllCountries(): int
     {
         $countries = Country::all();
-
         $count = 0;
-
         foreach ($countries as $country) {
 
             try {
@@ -73,9 +71,7 @@ class WorldBankService
 
                 EconomicHistory::create([
                     'country_id' => $country->id,
-
                     'indicator_type' => $field,
-
                     'indicator_value' =>
                         $result['value'],
 

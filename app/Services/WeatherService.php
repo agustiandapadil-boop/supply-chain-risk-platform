@@ -63,9 +63,7 @@ class WeatherService
                 ]),
 
                 'daily' => 'precipitation_sum',
-
                 'forecast_days' => 1,
-
                 'timezone' => 'auto',
             ]
         );
@@ -91,10 +89,8 @@ class WeatherService
 
         $temperature =
             $current['temperature_2m'] ?? 0;
-
         $windSpeed =
             $current['wind_speed_10m'] ?? 0;
-
         $weatherCode =
             $current['weather_code'] ?? 0;
 
@@ -144,12 +140,6 @@ class WeatherService
 
         $risk = 0;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Rainfall Risk
-        |--------------------------------------------------------------------------
-        */
-
         if ($rainfall > 5) {
             $risk += 15;
         }
@@ -161,12 +151,6 @@ class WeatherService
         if ($rainfall > 50) {
             $risk += 25;
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Wind Risk
-        |--------------------------------------------------------------------------
-        */
 
         if ($windSpeed > 30) {
             $risk += 15;
@@ -180,12 +164,6 @@ class WeatherService
             $risk += 25;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Extreme Temperature Risk
-        |--------------------------------------------------------------------------
-        */
-
         if ($temperature >= 40) {
             $risk += 20;
         }
@@ -193,12 +171,6 @@ class WeatherService
         if ($temperature <= 0) {
             $risk += 20;
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Open-Meteo Severe Weather Codes
-        |--------------------------------------------------------------------------
-        */
 
         $dangerousCodes = [
             65,

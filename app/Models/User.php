@@ -13,10 +13,11 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    'name',
+    'email',
+    'password',
+    'role',
+];
 
     protected $hidden = [
         'password',
@@ -37,4 +38,8 @@ class User extends Authenticatable
             Watchlist::class
         );
     }
+    public function isAdmin(): bool
+{
+    return $this->role === 'admin';
+}
 }

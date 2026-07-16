@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Country;
 use App\Models\NewsArticle;
 use App\Models\NewsSentiment;
 use Illuminate\Support\Facades\Http;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 class NewsService
 {
     private array $keywords = [
+
         'logistics',
         'shipping',
         'trade',
@@ -17,96 +19,155 @@ class NewsService
     ];
 
     public function syncNews(): int
-{
-    $count = 0;
+    {
+        $count = 0;
 
-    foreach ($this->keywords as $keyword) {
+        foreach ($this->keywords as $keyword) {
 
-        try {
+            try {
 
-            $response = Http::timeout(60)
-                ->retry(3, 2000)
-                ->get(
-                    'https://gnews.io/api/v4/search',
+                $response = Http::timeout(60)
+                    ->retry(3, 2000)
+                    ->get(
+                        'https://gnews.io/api/v4/search',
+                        [
+                            'q'       => $keyword,
+                            'lang'    => 'en',
+                            'max'     => 10,
+                            'apikey'  => config('services.gnews.key'),
+                        ]
+                    );
+
+                if (! $response->successful()) {
+
+                    logger()->warning(
+                        'GNews request failed',
+                        [
+                            'keyword' => $keyword,
+                            'status'  => $response->status(),
+                        ]
+                    );
+
+                    continue;
+                }
+
+                $articles =
+                    $response->json(
+                        'articles',
+                        []
+                    );
+
+                foreach ($articles as $article) {
+
+                    $countryId =
+                        $this->detectCountryId(
+                            $article
+                        );
+
+                    $news =
+                        NewsArticle::updateOrCreate(
+                            [
+                                'article_url' =>
+                                    $article['url'],
+                            ],
+                            [
+
+                                'country_id' =>
+                                    $countryId,
+
+                                'title' =>
+                                    $article['title']
+                                    ?? null,
+
+                                'description' =>
+                                    $article['description']
+                                    ?? null,
+
+                                'source_name' =>
+                                    $article['source']['name']
+                                    ?? null,
+
+                                'source_url' =>
+                                    $article['source']['url']
+                                    ?? null,
+
+                                'image_url' =>
+                                    $article['image']
+                                    ?? null,
+
+                                'category' =>
+                                    $keyword,
+
+                                'published_at' =>
+                                    $article['publishedAt']
+                                    ?? now(),
+
+                                'api_last_synced_at' =>
+                                    now(),
+                            ]
+                        );
+
+                    $this->analyzeSentiment(
+                        $news
+                    );
+
+                    $count++;
+                }
+
+            } catch (\Exception $e) {
+
+                logger()->error(
+                    'GNews sync failed',
                     [
-                        'q' => $keyword,
-                        'lang' => 'en',
-                        'max' => 10,
-                        'apikey' => config('services.gnews.key'),
-                    ]
-                );
-
-            if (! $response->successful()) {
-
-                logger()->warning(
-                    'GNews request failed',
-                    [
-                        'keyword' => $keyword,
-                        'status' => $response->status(),
-                    ]
-                );
-
-                continue;
-            }
-
-            $articles =
-                $response->json('articles', []);
-
-            foreach ($articles as $article) {
-
-                $news = NewsArticle::updateOrCreate(
-                    [
-                        'article_url' =>
-                            $article['url'],
-                    ],
-                    [
-                        'country_id' => null,
-
-                        'title' =>
-                            $article['title'] ?? null,
-
-                        'description' =>
-                            $article['description'] ?? null,
-
-                        'source_name' =>
-                            $article['source']['name'] ?? null,
-
-                        'source_url' =>
-                            $article['source']['url'] ?? null,
-
-                        'image_url' =>
-                            $article['image'] ?? null,
-
-                        'category' =>
+                        'keyword' =>
                             $keyword,
 
-                        'published_at' =>
-                            $article['publishedAt'] ?? now(),
-
-                        'api_last_synced_at' =>
-                            now(),
+                        'message' =>
+                            $e->getMessage(),
                     ]
                 );
-
-                $this->analyzeSentiment($news);
-
-                $count++;
             }
-
-        } catch (\Exception $e) {
-
-            logger()->error(
-                'GNews sync failed',
-                [
-                    'keyword' => $keyword,
-                    'message' => $e->getMessage(),
-                ]
-            );
         }
+
+        return $count;
     }
 
-    return $count;
+    private function detectCountryId(
+        array $article
+    ): ?int
+    {
+        $text = strtolower(
 
+            ($article['title'] ?? '')
+            . ' ' .
+
+            ($article['description'] ?? '')
+        );
+
+        $countries =
+            Country::select(
+                'id',
+                'country_name'
+            )->get();
+
+        foreach ($countries as $country) {
+
+            if (
+
+                str_contains(
+                    $text,
+                    strtolower(
+                        $country->country_name
+                    )
+                )
+
+            ) {
+
+                return $country->id;
+            }
+        }
+
+        return null;
     }
 
     private function analyzeSentiment(
@@ -114,6 +175,7 @@ class NewsService
     ): void
     {
         $positiveWords = [
+
             'growth',
             'increase',
             'profit',
@@ -129,9 +191,11 @@ class NewsService
             'gain',
             'success',
             'development',
+
         ];
 
         $negativeWords = [
+
             'war',
             'crisis',
             'inflation',
@@ -150,28 +214,35 @@ class NewsService
             'negative',
             'strike',
             'disruption',
+
         ];
 
         $text = strtolower(
-            ($article->title ?? '') . ' ' .
+
+            ($article->title ?? '')
+            . ' ' .
+
             ($article->description ?? '')
+
         );
 
-        $words = preg_split(
-            '/\s+/',
-            $text
-        );
+        $words =
+            preg_split(
+                '/\s+/',
+                $text
+            );
 
         $positiveScore = 0;
         $negativeScore = 0;
 
         foreach ($words as $word) {
 
-            $word = preg_replace(
-                '/[^a-z]/',
-                '',
-                $word
-            );
+            $word =
+                preg_replace(
+                    '/[^a-z]/',
+                    '',
+                    $word
+                );
 
             if (empty($word)) {
                 continue;
@@ -207,16 +278,24 @@ class NewsService
 
         $sentiment = 'Neutral';
 
-        if ($positiveScore > $negativeScore) {
+        if (
+            $positiveScore >
+            $negativeScore
+        ) {
             $sentiment = 'Positive';
         }
 
-        if ($negativeScore > $positiveScore) {
+        if (
+            $negativeScore >
+            $positiveScore
+        ) {
             $sentiment = 'Negative';
         }
 
         $sentimentScore =
-            $positiveScore - $negativeScore;
+            $positiveScore
+            -
+            $negativeScore;
 
         NewsSentiment::updateOrCreate(
             [
@@ -224,6 +303,7 @@ class NewsService
                     $article->id,
             ],
             [
+
                 'positive_score' =>
                     $positiveScore,
 

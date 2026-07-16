@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use Illuminate\Database\Eloquent\Relations\HasOne;
 class Port extends Model
 {
     protected $fillable = [
@@ -20,4 +20,12 @@ class Port extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+    public function congestion(): HasOne
+{
+    return $this->hasOne(
+        PortCongestion::class
+    );
+}
+
 }

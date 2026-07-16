@@ -14,6 +14,31 @@ class AuthViewController extends Controller
         return view('auth.login');
     }
 
+    public function showAdminLogin()
+    {
+        return view('auth.admin-login');
+    }
+
+    public function adminLogin(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($validated)) {
+            if (Auth::user()->isAdmin()) {
+                $request->session()->regenerate();
+                return redirect('/admin');
+            } else {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Access denied. Admin only.'])->withInput();
+            }
+        }
+
+        return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+    }
+
     public function showRegister()
     {
         return view('auth.register');

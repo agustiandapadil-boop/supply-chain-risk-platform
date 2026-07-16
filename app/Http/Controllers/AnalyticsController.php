@@ -10,6 +10,7 @@ use App\Models\NewsSentiment;
 use App\Models\Country;
 use App\Models\RiskScore;
 
+
 class AnalyticsController extends Controller
 {
 
@@ -108,5 +109,8 @@ class AnalyticsController extends Controller
                     'LOW'
                 )->count(),
         ];
+        
     }
+    
+    
 }

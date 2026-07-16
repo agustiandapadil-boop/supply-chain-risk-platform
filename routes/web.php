@@ -13,6 +13,17 @@ use App\Http\Controllers\AnalyticsViewController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\WatchlistViewController;
+use App\Http\Controllers\IntelligenceController;
+use App\Http\Controllers\CountryComparisonController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\PortManagementController;
+use App\Http\Controllers\Admin\ArticleManagementController;
+use App\Http\Controllers\NewsViewController;
+use App\Http\Controllers\PortViewController;
+use App\Http\Controllers\ArticleViewController;
+
 
 Route::get(
     '/',
@@ -27,6 +38,16 @@ Route::get(
 Route::post(
     '/login',
     [AuthViewController::class, 'login']
+);
+
+Route::get(
+    '/admin/login',
+    [AuthViewController::class, 'showAdminLogin']
+)->name('admin.login');
+
+Route::post(
+    '/admin/login',
+    [AuthViewController::class, 'adminLogin']
 );
 
 Route::get(
@@ -109,7 +130,34 @@ Route::get(
     [AnalyticsController::class, 'overview']
 );
 
-Route::middleware('auth')->group(function () {
+Route::middleware([
+    'auth',
+    'admin'
+])
+->prefix('admin')
+->group(function(){
+
+    Route::get(
+        '/',
+        [AdminDashboardController::class,'index']
+    );
+
+    Route::resource(
+        'users',
+        UserManagementController::class
+    );
+
+    Route::resource(
+        'ports',
+        PortManagementController::class
+    );
+
+    Route::resource(
+        'articles',
+        ArticleManagementController::class
+    );
+
+});
 
     Route::get(
         '/ui/dashboard',
@@ -126,6 +174,41 @@ Route::middleware('auth')->group(function () {
     Route::get(
         '/ui/analytics',
         [AnalyticsViewController::class, 'index']
+    );
+
+    Route::get(
+        '/ui/analytics/weather-map-data',
+        [AnalyticsViewController::class, 'weatherMapData']
+    );
+
+    Route::get(
+        '/ui/analytics/currency-history-data',
+        [AnalyticsViewController::class, 'currencyHistoryData']
+    );
+
+    Route::get(
+        '/ui/news',
+        [NewsViewController::class, 'index']
+    );
+
+    Route::get(
+        '/ui/ports',
+        [PortViewController::class, 'index']
+    );
+
+    Route::get(
+        '/ui/ports/map-data',
+        [PortViewController::class, 'mapData']
+    );
+
+    Route::get(
+        '/ui/articles',
+        [ArticleViewController::class, 'index']
+    );
+
+    Route::get(
+        '/ui/articles/{slug}',
+        [ArticleViewController::class, 'show']
     );
 
     Route::get(
@@ -147,4 +230,20 @@ Route::middleware('auth')->group(function () {
         '/monitoring',
         [WatchlistController::class, 'monitoring']
     );
+
+    Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/watchlist',
+        [WatchlistViewController::class, 'index']
+    );
+
 });
+Route::get(
+    '/ui/intelligence',
+    [IntelligenceController::class, 'index']
+);
+Route::get(
+    '/comparison/data',
+    [CountryComparisonController::class,'compare']
+);
