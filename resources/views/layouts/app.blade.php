@@ -422,20 +422,15 @@
 
             @auth
 
-                <form
-                    action="/logout"
-                    method="POST"
-                >
-
-                    @csrf
-
-                    <button
-                        class="btn btn-maroon"
-                    >
-                        Logout
-                    </button>
-
-                </form>
+                <form method="POST" action="/logout">
+    @csrf
+    <button
+        type="submit"
+        class="btn btn-maroon"
+    >
+        Logout
+    </button>
+</form>
 
             @endauth
 

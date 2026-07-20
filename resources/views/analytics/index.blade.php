@@ -503,7 +503,10 @@ new Chart(document.getElementById('tradeChart'), {
 
     return `
         <div style="min-width:220px;">
-            <h6>${c.name}</h6>
+            <h6 style="display:flex;align-items:center;gap:6px;">
+                ${c.iso2 ? `<img src="https://flagcdn.com/20x15/${c.iso2.toLowerCase()}.png" style="border-radius:2px;vertical-align:middle;" onerror="this.style.display='none'">` : ''}
+                ${c.name}
+            </h6>
 
             <p style="margin-bottom:6px;">
                 ${label}
@@ -631,8 +634,14 @@ Comparison Result
 
 <tr>
 <th>Metric</th>
-<th>${a.country_name}</th>
-<th>${b.country_name}</th>
+<th>
+    ${a.iso2 ? `<img src="https://flagcdn.com/20x15/${a.iso2.toLowerCase()}.png" style="border-radius:2px;vertical-align:middle;margin-right:5px;" onerror="this.style.display='none'">` : ''}
+    ${a.country_name}
+</th>
+<th>
+    ${b.iso2 ? `<img src="https://flagcdn.com/20x15/${b.iso2.toLowerCase()}.png" style="border-radius:2px;vertical-align:middle;margin-right:5px;" onerror="this.style.display='none'">` : ''}
+    ${b.country_name}
+</th>
 </tr>
 
 <tr>

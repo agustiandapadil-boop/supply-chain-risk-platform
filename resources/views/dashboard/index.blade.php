@@ -227,7 +227,10 @@
 
 <tr>
 <td>{{ $index + 1 }}</td>
-<td>{{ $country->country->country_name }}</td>
+<td>
+    <x-country-flag :iso2="$country->country->iso2" />
+    {{ $country->country->country_name }}
+</td>
 <td>{{ number_format($country->recommendation_score,2) }}</td>
 <td>
 
@@ -277,6 +280,7 @@ Not Recommended
                 @foreach($topRisks as $risk)
                 <tr>
                     <td>
+                        <x-country-flag :iso2="$risk->country->iso2" />
                         <a href="/ui/countries/{{ $risk->country_id }}">
                             {{ $risk->country->country_name }}
                         </a>
@@ -333,7 +337,12 @@ Not Recommended
                             margin-top:5px;
                         "></span>
                         <div>
-                            <strong style="font-size:0.9rem;">{{ $alert->country->country_name ?? 'Global' }}</strong>
+                            <strong style="font-size:0.9rem;">
+                                @if($alert->country)
+                                    <x-country-flag :iso2="$alert->country->iso2" />
+                                @endif
+                                {{ $alert->country->country_name ?? 'Global' }}
+                            </strong>
                             <br>
                             <small style="color:#94a3b8;">{{ $alert->message }}</small>
                         </div>
@@ -387,7 +396,9 @@ document.getElementById('countrySearch').addEventListener('keyup', function(){
     .then(data => {
         let html = '';
         data.forEach(country => {
-            html += `<a href="/ui/countries/${country.id}" class="list-group-item list-group-item-action">${country.country_name}</a>`;
+            const iso2 = (country.iso2 || '').toLowerCase();
+            const flagHtml = iso2 ? `<img src="https://flagcdn.com/20x15/${iso2}.png" style="border-radius:2px;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">` : '';
+            html += `<a href="/ui/countries/${country.id}" class="list-group-item list-group-item-action">${flagHtml}${country.country_name}</a>`;
         });
         document.getElementById('searchResults').innerHTML = html;
     });

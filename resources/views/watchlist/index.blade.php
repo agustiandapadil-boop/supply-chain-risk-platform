@@ -115,7 +115,8 @@
 
                     <td>
 
-                        <strong>
+                        <strong class="d-flex align-items-center gap-2">
+                            <x-country-flag :iso2="$watch->country->iso2" />
                             {{ $watch->country->country_name }}
                         </strong>
 
@@ -319,26 +320,24 @@ L.marker([
 ])
 .addTo(map)
 .bindPopup(`
-    <b>
-        {{ $watch->country->country_name }}
-    </b>
-    <br>
-
-    Risk:
-    {{
-        optional(
-            $watch->country->riskScore
-        )->risk_level
-    }}
-
-    <br>
-
-    Score:
-    {{
-        optional(
-            $watch->country->riskScore
-        )->total_score
-    }}
+    <div style="text-align:center;">
+        <img src="https://flagcdn.com/32x24/{{ strtolower($watch->country->iso2 ?? '') }}.png" style="border-radius:3px;margin-bottom:4px;" onerror="this.style.display='none'"><br>
+        <b>{{ $watch->country->country_name }}</b>
+        <br>
+        Risk:
+        {{
+            optional(
+                $watch->country->riskScore
+            )->risk_level
+        }}
+        <br>
+        Score:
+        {{
+            optional(
+                $watch->country->riskScore
+            )->total_score
+        }}
+    </div>
 `);
 
 @endforeach

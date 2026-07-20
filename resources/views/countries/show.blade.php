@@ -19,7 +19,8 @@ $tradeBalance =
 @endphp
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h1 class="fw-bold">
+        <h1 class="fw-bold d-flex align-items-center gap-3">
+            <x-country-flag :iso2="$country->iso2" size="40x30" style="border-radius:4px;" />
             {{ $country->country_name }}
         </h1>
         <p class="text-muted mb-0">

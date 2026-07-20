@@ -4,229 +4,310 @@
     <title>Login - SCRM</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts untuk tampilan font serif yang elegan mirip gambar -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap Icons untuk ikon input -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            /* Menggunakan background gambar penuh di body agar menyatu */
-            background: url('/img/background1.png') no-repeat center center;
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+        *{
+            box-sizing:border-box;
         }
 
-        .left-side {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 5% 8%;
-            position: relative;
-            z-index: 2;
+        body{
+            height:100vh;
+            margin:0;
+            font-family:'Plus Jakarta Sans',sans-serif;
+            background:#ffffff;
+            overflow:hidden;
         }
 
-        .left-content h1 {
-            /* Menggunakan font serif, warna maroon, ukuran lebih kecil & tanpa shadow */
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            line-height: 1.15;
-            color: #5c0616; 
-            max-width: 600px;
-            margin: 0;
+        .login-container{
+            display:flex;
+            height:100vh;
+            width:100%;
         }
 
-        .right-side {
-            width: 500px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            z-index: 2;
-            margin-right: 100px;
+        /* LEFT SIDE */
+        .left-side{
+            flex:1;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:40px;
+            background:#fafafa;
         }
 
-        /* Card login dengan border maroon, warna krem, dan shadow lembut */
-        .auth-card {
-            width: 100%;
-            max-width: 420px;
-            background: rgba(24cf, 246, 240, 0.92); /* Background krem pudar agar tembus pandang dikit */
-            background-color: #fefefeff; /* Alternatif jika rgba tidak support */
-            border: 3px solid #5c0616;
-            border-radius: 16px;
-            padding: 40px 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        .auth-wrapper{
+            width:100%;
+            max-width:400px;
         }
 
-        .brand-title {
-            color: #111;
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 25px;
+        .welcome-title{
+            font-size:2.7rem;
+            font-weight:800;
+            color:#000;
+            margin-bottom:8px;
+            letter-spacing:.5px;
         }
 
-        .form-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 6px;
+        .welcome-subtitle{
+            font-size:.95rem;
+            color:#777;
+            margin-bottom:35px;
         }
 
-        .input-group-custom {
-            position: relative;
-            margin-bottom: 20px;
+        .form-label{
+            font-size:.9rem;
+            font-weight:600;
+            color:#111;
+            margin-bottom:8px;
         }
 
-        .input-group-custom i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #777;
-            font-size: 1.1rem;
+        .form-control-custom{
+            width:100%;
+            height:48px;
+            border:1px solid #e0e0e0;
+            border-radius:12px;
+            padding:12px 18px;
+            font-size:.95rem;
+            outline:none;
+            box-shadow:0 2px 4px rgba(0,0,0,.02);
         }
 
-        .input-group-custom .form-control {
-            padding-left: 45px;
-            height: 48px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: transparent;
+        .form-control-custom:focus{
+            border-color:#8e101b;
         }
 
-        .input-group-custom .form-control:focus {
-            border-color: #5c0616;
-            box-shadow: 0 0 0 0.25rem rgba(92, 6, 22, 0.15);
+        .form-control-custom::placeholder{
+            color:#b8b8b8;
         }
 
-        .forgot-password {
-            display: block;
-            text-align: right;
-            font-size: 0.85rem;
-            color: #8a1d2e;
-            text-decoration: none;
-            margin-top: -10px;
-            margin-bottom: 25px;
+        .form-options{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+            font-size:.88rem;
         }
 
-        .forgot-password:hover {
-            text-decoration: underline;
+        .remember-me{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:#444;
+            font-weight:500;
         }
 
-        .btn-maroon {
-            background: #8a1d2e;
-            color: white;
-            height: 48px;
-            border-radius: 8px;
-            font-weight: 600;
-            border: none;
-            transition: background 0.2s ease;
+        .remember-me input{
+            width:16px;
+            height:16px;
+            accent-color:#8e101b;
         }
 
-        .btn-maroon:hover {
-            background: #5c0616;
-            color: white;
+        .forgot-password{
+            text-decoration:none;
+            color:#111;
+            font-weight:600;
         }
 
-        .card-footer-text {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #555;
-            margin-top: 20px;
+        .forgot-password:hover{
+            text-decoration:underline;
         }
 
-        .card-footer-text a {
-            color: #8a1d2e;
-            font-weight: 600;
-            text-decoration: none;
+        .btn-signin{
+            width:100%;
+            height:48px;
+            border:none;
+            border-radius:12px;
+            background:#8e101b;
+            color:white;
+            font-size:.95rem;
+            font-weight:600;
+            transition:.3s;
+            box-shadow:0 4px 12px rgba(142,16,27,.25);
         }
 
-        .card-footer-text a:hover {
-            text-decoration: underline;
+        .btn-signin:hover{
+            background:#a81422;
         }
 
-        @media (max-width: 992px) {
-            body {
-                flex-direction: column;
-                overflow-y: auto;
-                background-position: left center;
+        .btn-google{
+            width:100%;
+            height:48px;
+            margin-top:15px;
+            border:1px solid #e0e0e0;
+            border-radius:12px;
+            background:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            font-size:.95rem;
+            font-weight:600;
+        }
+
+        .btn-google:hover{
+            background:#f8f8f8;
+        }
+
+        .btn-google img{
+            width:20px;
+            height:20px;
+        }
+
+        .footer-text{
+            margin-top:25px;
+            text-align:center;
+            font-size:.88rem;
+            color:#666;
+        }
+
+        .footer-text a{
+            color:#8e101b;
+            font-weight:600;
+            text-decoration:none;
+        }
+
+        .footer-text a:hover{
+            text-decoration:underline;
+        }
+
+        /* RIGHT SIDE */
+        .right-side{
+            flex:1;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#ffffff;
+            overflow:hidden;
+        }
+
+        .ship-image{
+            width:170%;
+            max-width:1350px;
+            object-fit:contain;
+            transform:translateX(40px);
+        }
+
+        @media(max-width:992px){
+
+            body{
+                overflow-y:auto;
             }
-            .left-side {
-                padding: 40px 20px 20px 20px;
-                align-items: center;
-                text-align: center;
+
+            .login-container{
+                flex-direction:column;
+                height:auto;
             }
-            .left-content h1 {
-                font-size: 2.5rem;
+
+            .right-side{
+                display:none;
             }
-            .right-side {
-                width: 100%;
-                padding: 20px;
-                margin-bottom: 40px;
+
+            .left-side{
+                height:100vh;
+                padding:60px 20px;
+            }
+
+            .welcome-title{
+                font-size:2.2rem;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="left-side">
-    <div class="left-content">
-        <h1>Supply chain risk management</h1>
-    </div>
-</div>
+<div class="login-container">
 
-<div class="right-side">
-    <div class="auth-card">
+    <!-- LEFT -->
+    <div class="left-side">
 
-        <div class="brand-title">
-            Masuk
+        <div class="auth-wrapper">
+
+            <h1 class="welcome-title">
+                WELCOME
+            </h1>
+
+            <p class="welcome-subtitle">
+                Welcome USer.
+            </p>
+
+            @if($errors->any())
+                <div class="alert alert-danger py-2 px-3 mb-4">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+
+            <form method="POST" action="/login">
+                @csrf
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control-custom"
+                        placeholder="Enter your email"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        class="form-control-custom"
+                        placeholder="********"
+                        required>
+                </div>
+
+                <div class="form-options">
+
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember">
+                        Remember me
+                    </label>
+
+                    <a href="/forgot-password" class="forgot-password">
+                        Forgot password
+                    </a>
+
+                </div>
+
+                <button type="submit" class="btn-signin">
+                    Sign in
+                </button>
+
+                <div class="footer-text">
+                    Don't have an account?
+                    <a href="/register">
+                        Sign up for free!
+                    </a>
+                </div>
+
+            </form>
+
         </div>
 
-        @if($errors->any())
-            <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 0.9rem;">
-                {{ $errors->first() }}
-            </div>
-        @endif
+    </div>
 
-        <form method="POST" action="/login">
-            @csrf
+    <!-- RIGHT -->
+    <div class="right-side">
 
-            <div class="mb-3">
-                <label class="form-label">Username/Email</label>
-                <div class="input-group-custom">
-                    <i class="bi bi-person"></i>
-                    <input type="email" name="email" class="form-control" placeholder="Username/Email" required>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <div class="input-group-custom">
-                    <i class="bi bi-lock"></i>
-                    <input type="password" name="password" class="form-control" placeholder="Password" required>
-                </div>
-            </div>
-
-            <a href="/forgot-password" class="forgot-password">Lupa kata sandi?</a>
-
-            <button class="btn btn-maroon w-100 d-flex align-items-center justify-content-center gap-2">
-                Login <i class="bi bi-arrow-right"></i>
-            </button>
-        </form>
-
-        <div class="card-footer-text">
-            Belum punya akun? <a href="/register">Daftar</a>
-        </div>
+        <img
+            src="{{ asset('img/login1.png') }}"
+            alt="Ship"
+            class="ship-image">
 
     </div>
+
 </div>
 
 </body>
