@@ -1,59 +1,116 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌍 Supply Chain Risk Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📖 Deskripsi
 
-## About Laravel
+Supply Chain Risk Management System adalah aplikasi berbasis web yang dirancang untuk membantu perusahaan dalam memantau, menganalisis, dan mengelola risiko rantai pasok global. Sistem ini mengintegrasikan data cuaca, ekonomi, nilai tukar mata uang, pelabuhan, berita internasional, serta indikator risiko negara untuk mendukung pengambilan keputusan yang lebih cepat dan akurat.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# 🎯 Tujuan Sistem
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Sistem ini dikembangkan untuk:
 
-## Learning Laravel
+- Memantau kondisi negara yang berpotensi memengaruhi rantai pasok global.
+- Mengidentifikasi risiko berdasarkan faktor cuaca, ekonomi, mata uang, berita, dan infrastruktur pelabuhan.
+- Membantu perusahaan memilih negara tujuan impor yang lebih aman.
+- Memberikan peringatan dini (early warning system) terhadap potensi gangguan supply chain.
+- Menyediakan dashboard analitik untuk mendukung pengambilan keputusan berbasis data.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# ⚙️ Teknologi yang Digunakan
 
-## Laravel Sponsors
+| Teknologi | Fungsi |
+|-----------|---------|
+| Laravel 12 | Framework Backend |
+| PHP 8.x | Bahasa Pemrograman Backend |
+| MySQL | Database Management System |
+| Bootstrap 5 | User Interface Framework |
+| JavaScript | Interaktivitas Frontend |
+| Chart.js | Visualisasi Data dan Grafik |
+| Leaflet.js | Peta Interaktif |
+| Open-Meteo API | Data Cuaca Real-time |
+| GNews API | Data Berita Global |
+| REST Countries API | Data negara, bendera, kode negara, populasi, wilayah, dan koordinat geografis |
+| World Bank API | Data ekonomi negara seperti GDP, inflasi, ekspor, impor, dan indikator pembangunan |
+| Laravel Scheduler | Otomatisasi Pembaruan Data |
+| Laravel Queue | Pemrosesan Background Job |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+# 🔗 Endpoint Utama Sistem
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+| Method | Endpoint | Fungsi |
+|---------|----------|---------|
+| GET | /ui/dashboard | Dashboard utama |
+| GET | /ui/countries/{id} | Detail negara |
+| GET | /ui/analytics | Global Analytics Center |
+| GET | /ui/news | Global News Intelligence |
+| GET | /ui/ports | Global Port Monitoring |
+| GET | /ui/articles | Daftar artikel |
+| GET | /ui/articles/{slug} | Detail artikel |
+| GET | /watchlist | Monitoring watchlist |
+| GET | /ui/intelligence | Intelligence Dashboard |
+| GET | /comparison/data | Perbandingan negara |
 
-## Contributing
+Secara keseluruhan sistem memiliki lebih dari 30 endpoint yang mencakup autentikasi, dashboard, analitik, monitoring, watchlist, artikel, manajemen pelabuhan, dan panel administrasi.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+# ⏰ Scheduler dan Automation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Sistem menggunakan Laravel Scheduler untuk melakukan pembaruan data secara otomatis, meliputi:
 
-## Security Vulnerabilities
+- Update data cuaca.
+- Update nilai tukar mata uang.
+- Update berita global.
+- Perhitungan ulang Risk Score.
+- Pembuatan Alert otomatis.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Instalasi
+Clone Repository
+git clone https://github.com/agustiandapadil-boop/supply-chain-risk-management.git
 
-## License
+- Masuk ke Folder Project
+cd supply-chain-risk-management
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Install Dependency
+composer install
+
+- Salin File Environment
+cp .env.example .env
+
+- Generate Application Key
+php artisan key:generate
+
+- Konfigurasi Database
+Edit file .env
+DB_DATABASE=supply_chain_risk
+DB_USERNAME=root
+DB_PASSWORD=
+
+- Jalankan Migrasi
+php artisan migrate
+
+- Jalankan Seeder
+php artisan db:seed
+
+Menjalankan scheduler:
+
+```bash
+php artisan schedule:work
+```
+
+Menjalankan queue:
+
+```bash
+php artisan queue:work
+```
+
+Menjalankan server:
+
+```bash
+php artisan serve
+```
+
+---
