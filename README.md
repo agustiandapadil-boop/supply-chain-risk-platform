@@ -93,9 +93,11 @@ php artisan key:generate
 
 - Konfigurasi Database
 Edit file .env
+``` bash
 DB_DATABASE=supply_chain_risk
 DB_USERNAME=root
 DB_PASSWORD=
+```
 
 - Jalankan Migrasi
 ``` bash
