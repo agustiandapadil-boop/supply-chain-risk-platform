@@ -72,16 +72,24 @@ Clone Repository
 git clone https://github.com/agustiandapadil-boop/supply-chain-risk-management.git
 
 - Masuk ke Folder Project
+``` bash
 cd supply-chain-risk-management
+```
 
 - Install Dependency
+``` bash
 composer install
+```
 
 - Salin File Environment
+``` bash
 cp .env.example .env
+```
 
 - Generate Application Key
+``` bash
 php artisan key:generate
+```
 
 - Konfigurasi Database
 Edit file .env
@@ -90,10 +98,14 @@ DB_USERNAME=root
 DB_PASSWORD=
 
 - Jalankan Migrasi
+``` bash
 php artisan migrate
+```
 
 - Jalankan Seeder
+``` bash
 php artisan db:seed
+```
 
 Menjalankan scheduler:
 
