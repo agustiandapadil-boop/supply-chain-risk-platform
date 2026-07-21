@@ -69,7 +69,7 @@ Sistem menggunakan Laravel Scheduler untuk melakukan pembaruan data secara otoma
 
 # Instalasi
 Clone Repository
-git clone https://github.com/agustiandapadil-boop/supply-chain-risk-management.git
+git clone https://github.com/agustiandapadil-boop/supply-chain-risk-platform.git
 
 - Masuk ke Folder Project
 ``` bash
