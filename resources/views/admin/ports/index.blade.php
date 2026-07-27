@@ -10,7 +10,9 @@ align-items-center
 mb-4"
 >
     <h2>World Port Dataset</h2>
-
+    <a href="{{ route('ports.create') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add New Port
+    </a>
 </div>
 <div class="row g-3 mb-4">
     <div class="col-md-3">
@@ -161,6 +163,7 @@ align-middle
     <th>Delay (H)</th>
     <th>Utilization</th>
     <th>Risk</th>
+    <th>Action</th>
 
 </tr>
 </thead>
@@ -252,6 +255,18 @@ align-middle
                         >LOW</span>
 
                     @endif
+                </td>
+                <td>
+                    <a href="{{ route('ports.edit', $port->id) }}" class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
+                    <form action="{{ route('ports.destroy', $port->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this port?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Delete
+                        </button>
+                    </form>
                 </td>
             </tr>
             @endforeach

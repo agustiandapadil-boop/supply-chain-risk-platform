@@ -72,10 +72,8 @@ class DashboardService
                 return [
                     'country' =>
                         $risk->country->country_name,
-
                     'score' =>
                         $risk->total_score,
-
                     'level' =>
                         $risk->risk_level,
                 ];

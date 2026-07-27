@@ -15,17 +15,13 @@ class RiskScoringService
     public function calculateAllCountries(): int
     {
         $countries = Country::all();
-
         $count = 0;
-
         foreach ($countries as $country) {
-
             try {
 
                 $this->calculateCountryRisk(
                     $country
                 );
-
                 $count++;
 
             } catch (\Exception $e) {
@@ -35,7 +31,6 @@ class RiskScoringService
                     [
                         'country' =>
                             $country->country_name,
-
                         'message' =>
                             $e->getMessage(),
                     ]
@@ -45,7 +40,6 @@ class RiskScoringService
 
         return $count;
     }
-
     public function calculateCountryRisk(
         Country $country
     ): void
@@ -54,20 +48,16 @@ class RiskScoringService
             $this->calculateWeatherRisk(
                 $country
             );
-
         $inflationScore =
             $this->calculateInflationRisk(
                 $country
             );
-
         $currencyScore =
             $this->calculateCurrencyRisk(
                 $country
             );
-
         $newsScore =
             $this->calculateNewsRisk();
-
         $portScore =
             $this->calculatePortRisk(
                 $country
@@ -115,25 +105,18 @@ class RiskScoringService
 
                 'weather_score' =>
                     $weatherScore,
-
                 'inflation_score' =>
                     $inflationScore,
-
                 'currency_score' =>
                     $currencyScore,
-
                 'news_score' =>
                     $newsScore,
-
                 'port_score' =>
                     $portScore,
-
                 'total_score' =>
                     $totalScore,
-
                 'risk_level' =>
                     $riskLevel,
-
                 'calculated_at' =>
                     now(),
             ]
@@ -143,22 +126,16 @@ class RiskScoringService
 
             'country_id' =>
                 $country->id,
-
             'weather_score' =>
                 $weatherScore,
-
             'inflation_score' =>
                 $inflationScore,
-
             'currency_score' =>
                 $currencyScore,
-
             'news_score' =>
                 $newsScore,
-
             'total_score' =>
                 $totalScore,
-
             'risk_level' =>
                 $riskLevel,
 

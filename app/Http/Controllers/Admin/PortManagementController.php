@@ -112,4 +112,54 @@ class PortManagementController extends Controller
             )
         );
     }
+
+    public function create()
+    {
+        $countries = Country::orderBy('country_name')->get();
+        return view('admin.ports.create', compact('countries'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'country_id' => 'required|exists:countries,id',
+            'port_name' => 'required|string|max:255',
+            'harbor_size' => 'nullable|string|max:50',
+            'harbor_type' => 'nullable|string|max:50',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ]);
+
+        Port::create($request->all());
+
+        return redirect()->route('ports.index')->with('success', 'Port created successfully.');
+    }
+
+    public function edit(Port $port)
+    {
+        $countries = Country::orderBy('country_name')->get();
+        return view('admin.ports.edit', compact('port', 'countries'));
+    }
+
+    public function update(Request $request, Port $port)
+    {
+        $request->validate([
+            'country_id' => 'required|exists:countries,id',
+            'port_name' => 'required|string|max:255',
+            'harbor_size' => 'nullable|string|max:50',
+            'harbor_type' => 'nullable|string|max:50',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ]);
+
+        $port->update($request->all());
+
+        return redirect()->route('ports.index')->with('success', 'Port updated successfully.');
+    }
+
+    public function destroy(Port $port)
+    {
+        $port->delete();
+        return redirect()->route('ports.index')->with('success', 'Port deleted successfully.');
+    }
 }

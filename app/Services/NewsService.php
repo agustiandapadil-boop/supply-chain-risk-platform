@@ -34,6 +34,7 @@ class NewsService
                             'q'       => $keyword,
                             'lang'    => 'en',
                             'max'     => 10,
+                            'sortby'  => 'publishedAt',
                             'apikey'  => config('services.gnews.key'),
                         ]
                     );

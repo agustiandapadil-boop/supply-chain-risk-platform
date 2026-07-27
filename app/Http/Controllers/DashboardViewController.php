@@ -15,17 +15,11 @@ class DashboardViewController extends Controller
         $countries = Country::count();
 
         $highRisk = RiskScore::where('risk_level', 'High')->count();
-
         $mediumRisk = RiskScore::where('risk_level', 'Medium')->count();
-
         $lowRisk = RiskScore::where('risk_level', 'Low')->count();
-
         $averageRisk = round(RiskScore::avg('total_score'), 2);
-
         $activeAlerts = Alert::count();
-
         $weatherAlerts = WeatherRecord::where('weather_risk_score', '>=', 60)->count();
-
         $topRisks = RiskScore::with('country')
             ->orderByDesc('total_score')
             ->limit(10)

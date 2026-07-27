@@ -15,13 +15,9 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $totalUsers = User::count();
-
         $totalPorts = Port::count();
-
         $totalArticles = AnalysisArticle::count();
-
         $highRiskCountries = RiskScore::where('risk_level', 'High')->count();
-
         $topBestCountries = RecommendationScore::with('country')
             ->orderByDesc('recommendation_score')
             ->take(10)

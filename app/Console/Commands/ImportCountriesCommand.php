@@ -12,7 +12,6 @@ class ImportCountriesCommand extends Command
     protected $signature = 'import:countries';
 
     protected $description = 'Import countries from REST Countries API';
-
     public function handle(\App\Services\CountrySyncService $service): int
     {
         $this->info('Fetching countries from REST Countries API...');

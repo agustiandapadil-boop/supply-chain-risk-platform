@@ -10,21 +10,13 @@ class AnalysisArticle extends Model
     protected $fillable = [
 
         'title',
-
         'slug',
-
         'country_id',
-
         'category',
-
         'summary',
-
         'content',
-
         'author',
-
         'status',
-
         'published_at'
     ];
 

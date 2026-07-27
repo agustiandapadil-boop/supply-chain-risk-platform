@@ -20,7 +20,6 @@ class Port extends Model
     {
         return $this->belongsTo(Country::class);
     }
-
     public function congestion(): HasOne
 {
     return $this->hasOne(
