@@ -10,7 +10,7 @@ Artisan::command('inspire', function () {
 
 Schedule::command('sync:currency')->everyMinute()->runInBackground()->withoutOverlapping();
 Schedule::command('sync:economy')->everyMinute()->runInBackground()->withoutOverlapping();
-Schedule::command('sync:news')->everyMinute()->runInBackground()->withoutOverlapping();
+Schedule::command('sync:news')->hourly()->runInBackground()->withoutOverlapping();
 Schedule::command('ports:sync')->everyMinute()->runInBackground()->withoutOverlapping();
 Schedule::command('sync:weather')->everyMinute()->runInBackground()->withoutOverlapping();
 Schedule::command('ports:congestion')->everyMinute()->runInBackground()->withoutOverlapping();
