@@ -42,6 +42,10 @@ class CountrySyncService
                         ??
                         null,
 
+                    'slug' => \Illuminate\Support\Str::slug(
+                        $item['names']['common'] ?? $item['names']['short'] ?? $iso2
+                    ),
+
                     'capital' =>
                         $item['capitals'][0]['name']
                         ?? null,
