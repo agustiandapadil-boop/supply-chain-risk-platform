@@ -9,8 +9,8 @@ class PortSyncService
 {
     public function sync(): int
 {
-    $path = storage_path(
-        'app/world_port_index.csv'
+    $path = base_path(
+        'database/data/world_port_index.csv'
     );
 
     if (!file_exists($path)) {
