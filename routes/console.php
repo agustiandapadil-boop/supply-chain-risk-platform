@@ -11,8 +11,8 @@ Artisan::command('inspire', function () {
 Schedule::command('sync:currency')->everyMinute()->runInBackground()->withoutOverlapping();
 Schedule::command('sync:economy')->everyMinute()->runInBackground()->withoutOverlapping();
 Schedule::command('sync:news')->everyMinute()->runInBackground()->withoutOverlapping();
-Schedule::command('sync:ports')->everyMinute()->runInBackground()->withoutOverlapping();
+Schedule::command('ports:sync')->everyMinute()->runInBackground()->withoutOverlapping();
 Schedule::command('sync:weather')->everyMinute()->runInBackground()->withoutOverlapping();
-Schedule::command('generate:port-congestion')->everyMinute()->runInBackground()->withoutOverlapping();
+Schedule::command('ports:congestion')->everyMinute()->runInBackground()->withoutOverlapping();
 Schedule::command('risk:calculate')->everyMinute()->runInBackground()->withoutOverlapping();
-Schedule::command('generate:alerts')->everyMinute()->runInBackground()->withoutOverlapping();
+Schedule::command('alerts:generate')->everyMinute()->runInBackground()->withoutOverlapping();
